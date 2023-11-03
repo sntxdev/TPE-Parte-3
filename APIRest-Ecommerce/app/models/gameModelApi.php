@@ -6,7 +6,10 @@ class GameModel extends Model
 {
     function getGames()
     {
-        $query = $this->db->prepare("SELECT juegos.*, categorias.Nombre AS Categoria FROM juegos JOIN categorias ON juegos.Id_categoria = categorias.Id_categoria GROUP BY juegos.Id_juego ASC");
+        $sortField = isset($_GET['sort']) ? $_GET['sort'] : 'Id_juego';
+        $orderDirection = isset($_GET['order']) ? $_GET['order'] : 'asc';
+
+        $query = $this->db->prepare("SELECT juegos.*, categorias.Nombre AS Categoria FROM juegos JOIN categorias ON juegos.Id_categoria = categorias.Id_categoria ORDER BY $sortField $orderDirection");
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_OBJ);
 
@@ -51,7 +54,7 @@ class GameModel extends Model
 
     function deleteGame($id)
     {
-        $query = $this->db->prepare('DELETE FROM juegos WHERE Id_juego = :id');
+        $query = $this->db->prepare("DELETE FROM juegos WHERE Id_juego = :id");
         $query->bindParam(':id', $id);
         $query->execute();
     }

@@ -40,7 +40,7 @@ class CategoryControllerApi extends ControllerApi
             $id = $this->model->addCategory($nombre, $descripcion);
 
             $category = $this->model->getCategory($id);
-            $this->view->response($category, 200);
+            $this->view->response($category, 201);
         }
     }
 
@@ -55,7 +55,7 @@ class CategoryControllerApi extends ControllerApi
             $descripcion = $body->Descripcion;
             $this->model->updateCategory($id, $nombre, $descripcion);
 
-            $this->view->response('La categoria con id= ' . $id . ' ha sido modificado.', 200);
+            $this->view->response('La categoria con id= ' . $id . ' ha sido modificado.', 201);
         } else {
             $this->view->response('La categoria con id= ' . $id . 'no existe.', 404);
         }

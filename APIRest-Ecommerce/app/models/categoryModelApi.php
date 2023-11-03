@@ -5,7 +5,10 @@ class CategoryModel extends Model
 {
     function getCategories()
     {
-        $query = $this->db->prepare('SELECT * FROM categorias');
+        $sortField = isset($_GET['sort']) ? $_GET['sort'] : 'Id_categoria';
+        $orderDirection = isset($_GET['order']) ? $_GET['order'] : 'asc';
+
+        $query = $this->db->prepare("SELECT * FROM categorias ORDER BY $sortField $orderDirection");
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_OBJ);
 
@@ -14,7 +17,7 @@ class CategoryModel extends Model
 
     function getCategory($id)
     {
-        $query = $this->db->prepare('SELECT * FROM categorias WHERE Id_categoria = :id_categoria');
+        $query = $this->db->prepare("SELECT * FROM categorias WHERE Id_categoria = :id_categoria");
         $query->bindParam(':id_categoria', $id);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_OBJ);
@@ -24,7 +27,7 @@ class CategoryModel extends Model
 
     function addCategory($nombre, $descripcion)
     {
-        $query = $this->db->prepare('INSERT INTO categorias (Nombre, Descripcion) VALUES (:nombre, :descripcion)');
+        $query = $this->db->prepare("INSERT INTO categorias (Nombre, Descripcion) VALUES (:nombre, :descripcion)");
         $query->bindParam(':nombre', $nombre);
         $query->bindParam(':descripcion', $descripcion);
         $query->execute();
@@ -34,7 +37,7 @@ class CategoryModel extends Model
 
     function updateCategory($id, $nombre, $descripcion)
     {
-        $query = $this->db->prepare('UPDATE categorias SET Nombre = :nombre, Descripcion = :descripcion WHERE Id_categoria = :id');
+        $query = $this->db->prepare("UPDATE categorias SET Nombre = :nombre, Descripcion = :descripcion WHERE Id_categoria = :id");
         $query->bindParam(':id', $id);
         $query->bindParam(':nombre', $nombre);
         $query->bindParam(':descripcion', $descripcion);
@@ -43,7 +46,7 @@ class CategoryModel extends Model
 
     function deleteCategory($id)
     {
-        $query = $this->db->prepare('DELETE FROM categorias WHERE Id_categoria = :id');
+        $query = $this->db->prepare("DELETE FROM categorias WHERE Id_categoria = :id");
         $query->bindParam(':id', $id);
         $query->execute();
     }

@@ -62,7 +62,7 @@ class GameControllerApi extends ControllerApi
             $imagen = $body->Imagen;
             $this->model->updateGame($id, $categoria, $nombre, $descripcion, $precio, $imagen);
 
-            $this->view->response('El juego con id= ' . $id . ' ha sido modificado.', 200);
+            $this->view->response('El juego con id= ' . $id . ' ha sido modificado.', 201);
         } else {
             $this->view->response('El juego con id= ' . $id . ' no existe.', 404);
         }
