@@ -1,16 +1,21 @@
 <?php
+require_once 'controllerApi.php';
+require_once 'app/models/gameModelApi.php';
 
 class GameControllerApi extends ControllerApi
 {
+    private $model;
+
     function __construct()
     {
         parent::__construct();
         $this->model = new GameModel();
     }
+
     function get($params = [])
     {
         if (empty($params)) {
-            $games = $this->model->getListGames();
+            $games = $this->model->getGames();
             return $this->view->response($games, 200);
         } else {
             $game = $this->model->getGame($params[":ID"]);
@@ -21,60 +26,58 @@ class GameControllerApi extends ControllerApi
             }
         }
     }
-    function create( $params = [] ) 
+
+    function create($params = [])
     {
-       $body = $this->getData();
+        $body = $this->getData();
 
-       $categoria = $body->categoriaJuego;
-       $nombre = $body->nombreJuego;
-       $precio = $body->precio;
-       $imagen = $body->imagen;
+        $categoria = $body->Id_categoria;
+        $nombre = $body->Nombre;
+        $descripcion = $body->Descripcion;
+        $precio = $body->Precio;
+        $imagen = $body->Imagen;
 
-       if(empty($categoria) || empty($nombre) || empty ($precio) || empty($imagen) )
-       {
+        if (empty($categoria) || empty($nombre) || empty($precio) || empty($imagen)) {
             $this->view->response("Completa los datos flaquito", 400);
-
-       } else 
-        {
-            $id = $this->model->addGame($categoria, $nombre, $precio, $imagen);
+        } else {
+            $id = $this->model->addGame($categoria, $nombre, $descripcion, $precio, $imagen);
 
             //dijo el profe que en una API es buena practica devolver el recurso creado
-            $juego = $this->model->getGame($id); 
-            $this->view->response($juego,201);
+            $juego = $this->model->getGame($id);
+            $this->view->response($juego, 201);
         }
     }
+
     function update($params = [])
     {
         $id = $params[':ID'];
         $game = $this->model->getGame($id);
 
-        if($game)
-        {
+        if ($game) {
             $body = $this->getData();
-            $Id_categoria = $body->Id_categoriaJuego;
-            $nombre = $body->nombreJuego;
-            $precio = $body->precio;
-            $imagen = $body->imagen;
-            $this->model->updateGame($Id_categoria, $nombre, $precio, $imagen);
+            $categoria = $body->Id_categoria;
+            $nombre = $body->Nombre;
+            $descripcion = $body->Descripcion;
+            $precio = $body->Precio;
+            $imagen = $body->Imagen;
+            $this->model->updateGame($id, $categoria, $nombre, $descripcion, $precio, $imagen);
 
-            $this->view->response('El juego con id=' . $id. 'ha sido modificado.', 200);
-        }   else  
-            {
-                $this->view->response('El juego con id=' . $id . 'no existe.', 404);
-            }
+            $this->view->response('El juego con id= ' . $id . ' ha sido modificado.', 200);
+        } else {
+            $this->view->response('El juego con id= ' . $id . ' no existe.', 404);
+        }
     }
-    function delete ($params [])
+
+    function delete($params = [])
     {
         $id = $params[':ID'];
         $game = $this->model->getGame($id);
 
-        if($game)
-        {
+        if ($game) {
             $this->model->deleteGame($id);
-            $this->view->response('El juego con id= ' . $id . 'ha sido eliminado', 200);
-        }   else 
-            {
-                $this->view->response('El juego con id=' . $id . 'no existe', 404); 
-            }
+            $this->view->response('El juego con id= ' . $id . ' ha sido eliminado', 200);
+        } else {
+            $this->view->response('El juego con id= ' . $id . ' no existe', 404);
+        }
     }
 }
