@@ -9,10 +9,10 @@ $router = new Router();
 
 #                 endpoint      verbo     controller           método
 $router->addRoute('juegos',     'GET',    'GameControllerApi', 'get');   # GameControllerApi->get($params)
-$router->addRoute('juegos',     'POST',   'GameControllerApi', 'create');
+$router->addRoute('juegos',     'POST',   'GameControllerApi', 'create');# GameControllerApi->create($params)
 $router->addRoute('juegos/:ID', 'GET',    'GameControllerApi', 'get');   # GameControllerApi->get($params[":ID"])
-$router->addRoute('juegos/:ID', 'PUT',    'GameControllerApi', 'update');
-$router->addRoute('juegos/:ID', 'DELETE', 'GameControllerApi', 'delete');
+$router->addRoute('juegos/:ID', 'PUT',    'GameControllerApi', 'update');# GameControllerApi->update($params[":ID"])
+$router->addRoute('juegos/:ID', 'DELETE', 'GameControllerApi', 'delete');# GameControllerApi->delete($params[":ID"])
 
 $router->addRoute('user/token', 'GET',    'UserApiController', 'getToken'); # UserApiController->getToken()
 
