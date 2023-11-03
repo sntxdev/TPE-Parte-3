@@ -36,9 +36,9 @@ class Model
                       (4, 'Strategy', '\"Strategy\" video games are known for their emphasis on critical thinking, planning, and resource management. These games challenge players to use their intellect to outmaneuver opponents or solve complex puzzles.', 1),
                       (5, 'Metroidvania', '\"Metroidvania\" video games blend elements of exploration, action, and platforming, typically in a nonlinear world filled with secrets and upgrades. This category draws its name from two iconic game series, \"Metroid\" and \"Castlevania\", which pioneered this style of gameplay.', 3),
                       (6, 'Action', 'An action game is a video game genre that emphasizes physical challenges, including hand–eye coordination and reaction time.', 1);
-                      
+                      END;
                       -- --------------------------------------------------------
-                      
+                      <<<END
                       --
                       -- Table structure for table `juegos`
                       --
@@ -81,7 +81,8 @@ class Model
                               WHERE juegos.id_categoria = categorias.id_categoria
                           )
                           WHERE id_categoria = OLD.id_categoria;
-                      END
+                      END;
+                      <<<END
                       $$
                       DELIMITER ;
                       DELIMITER $$
@@ -89,7 +90,8 @@ class Model
                           UPDATE categorias
                           SET cantidad_juegos = cantidad_juegos + 1
                           WHERE id_categoria = NEW.id_categoria;
-                      END
+                      END;
+                      <<<END
                       $$
                       DELIMITER ;
                       DELIMITER $$
@@ -101,12 +103,10 @@ class Model
                               WHERE juegos.id_categoria = categorias.id_categoria
                           )
                           WHERE id_categoria = NEW.id_categoria;
-                      END
-                      $$
-                      DELIMITER ;
+                      END;
                       
                       -- --------------------------------------------------------
-                      
+                    <<<END
                       --
                       -- Table structure for table `usuarios`
                       --
@@ -135,6 +135,8 @@ class Model
                       (8, 0, 0, 'sergioc@gmail.com', 'Sergio', '$2y$10$ZzIAx1TqeIKZ0fpWJgVHAeCf5ZRTG9GUoxpaAsxhD3vERbrCBfpwy'),
                       (9, 1, 0, 'ale2.0@gmail.com', 'Ale 2.0', '$2y$10$5rk6TZ1/QDXFKG.GyJjjQOCcy.lSfK6fsYu5n4N8tfC7YLZx4ogQm');
                       
+                      END;
+                      <<<END
                       --
                       -- Indexes for dumped tables
                       --
@@ -196,5 +198,6 @@ class Model
 
                 
         }
+        function getListGames(){}
 
 }
