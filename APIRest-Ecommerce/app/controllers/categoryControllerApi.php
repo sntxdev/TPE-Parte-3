@@ -18,16 +18,16 @@ class CategoryControllerApi extends ControllerApi
             $categories = $this->model->getCategories();
             return $this->view->response($categories, 200);
         } else {
-            $game = $this->model->getCategory($params[':ID']);
-            if (!empty($game)) {
-                return $this->view->response($game, 200);
+            $categories = $this->model->getCategory($params[':ID']);
+            if (!empty($categories)) {
+                return $this->view->response($categories, 200);
             } else {
-                return $this->view->response($game, 404);
+                return $this->view->response('La categoria con id= ' . $params[':ID'] . ' no existe.', 404);
             }
         }
     }
 
-    function create($params = [])
+    function create()
     {
         $body = $this->getData();
 

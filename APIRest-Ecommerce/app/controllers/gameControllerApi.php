@@ -22,12 +22,12 @@ class GameControllerApi extends ControllerApi
             if (!empty($game)) {
                 return $this->view->response($game, 200);
             } else {
-                return $this->view->response($game, 404);
+                return $this->view->response('El juego con id= ' . $params[':ID'] . ' no existe.', 404);
             }
         }
     }
 
-    function create($params = [])
+    function create()
     {
         $body = $this->getData();
 
@@ -59,8 +59,9 @@ class GameControllerApi extends ControllerApi
             $nombre = $body->Nombre;
             $descripcion = $body->Descripcion;
             $precio = $body->Precio;
+            $descuento = $body->Descuento;
             $imagen = $body->Imagen;
-            $this->model->updateGame($id, $categoria, $nombre, $descripcion, $precio, $imagen);
+            $this->model->updateGame($id, $categoria, $nombre, $descripcion, $precio, $descuento, $imagen);
 
             $this->view->response('El juego con id= ' . $id . ' ha sido modificado.', 201);
         } else {
