@@ -6,38 +6,23 @@ class GameModel extends Model
 {
     function getGames()
     {
-        $sortField = isset($_GET['sort']) ? $_GET['sort'] : 'id_juego';
-        $orderDirection = isset($_GET['order']) ? $_GET['order'] : 'asc';
-        $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
-        $condition = isset($_GET['condition']) ? $_GET['condition'] : '';
-        $comparison = isset($_GET['comparison']) ? $_GET['comparison'] : 'equal';
+        $sortField = $_GET['sort'] ?? 'id_juego';
+        $orderDirection = $_GET['order'] ?? 'asc';
+        $filter = $_GET['filter'] ?? '';
+        $condition = $_GET['condition'] ?? '0';
+        $comparison = $_GET['comparison'] ?? 'equal';
+        $page = $_GET['page'] ?? '';
+        $offers = $_GET['offers'] ?? '';
 
-        if (!empty($filter) && !empty($condition)) {
-            if ($filter === 'precio' || $filter === 'descuento' || $filter === 'id_juego') {
-                switch ($comparison) {
-                    case 'greater':
-                        $operator = '>';
-                        break;
-                    case 'less':
-                        $operator = '<';
-                        break;
-                    default:
-                        $operator = '=';
-                }
-                $query = $this->db->prepare("SELECT * FROM juegos WHERE $filter $operator $condition ORDER BY $sortField $orderDirection");
-            } else {
-                $query = $this->db->prepare("SELECT * FROM juegos WHERE $filter LIKE '%$condition%' ORDER BY $sortField $orderDirection");
-            }
-
-            $query->execute();
-            $result = $query->fetchAll(PDO::FETCH_OBJ);
-        } else {
-            $query = $this->db->prepare("SELECT juegos.*, categorias.Nombre AS Categoria FROM juegos JOIN categorias ON juegos.Id_categoria = categorias.Id_categoria ORDER BY $sortField $orderDirection");
-            $query->execute();
-            $result = $query->fetchAll(PDO::FETCH_OBJ);
+        if (!empty($page)) {
+            return $this->gameFunctions->getGamesByPage($sortField, $orderDirection, $page);
         }
 
-        return $result;
+        if (!empty($filter) && !empty($condition)) {
+            return $this->gameFunctions->getGamesByFilter($sortField, $orderDirection, $filter, $condition, $comparison);
+        }
+
+        return $this->gameFunctions->getAllGames($sortField, $orderDirection);
     }
 
     function getGame($id)
