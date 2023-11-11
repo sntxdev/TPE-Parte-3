@@ -57,7 +57,7 @@ class GameControllerApi extends ControllerApi
         $precio = $body->Precio;
         $imagen = $body->Imagen;
 
-        if (empty($categoria) || empty($nombre) || empty($precio) || empty($imagen)) {
+        if (empty($categoria) || empty($nombre) || empty($precio)) {
             $this->view->response("Completa los datos flaquito", 400);
         } else {
             $id = $this->model->addGame($categoria, $nombre, $descripcion, $precio, $imagen);
@@ -80,8 +80,10 @@ class GameControllerApi extends ControllerApi
             $descripcion = $body->Descripcion;
             $precio = $body->Precio;
             $descuento = $body->Descuento;
+            $precioDescuento = $this->discountApply($precio, $descuento);
             $imagen = $body->Imagen;
-            $this->model->updateGame($id, $categoria, $nombre, $descripcion, $precio, $descuento, $imagen);
+
+            $this->model->updateGame($id, $categoria, $nombre, $descripcion, $precio, $descuento, $precioDescuento, $imagen);
 
             $this->view->response('El juego con id= ' . $id . ' ha sido modificado.', 201);
         } else {
@@ -100,5 +102,10 @@ class GameControllerApi extends ControllerApi
         } else {
             $this->view->response('El juego con id= ' . $id . ' no existe', 404);
         }
+    }
+
+    private function discountApply($precio, $descuento)
+    {
+        return $precio - ($precio * $descuento / 100);
     }
 }

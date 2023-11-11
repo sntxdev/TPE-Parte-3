@@ -17,25 +17,27 @@ class CategoryModel extends Model
 
     function getCategory($id)
     {
-        $query = $this->db->prepare("SELECT categorias.*, 
-            CONCAT('[', GROUP_CONCAT(
-                JSON_OBJECT(
-                    'Id', juegos.Id_juego,
-                    'Nombre', juegos.Nombre,
-                    'Descripcion', juegos.Descripcion,
-                    'Precio', juegos.Precio, 
-                    'Descuento', juegos.Descuento,
-                    'Precio Descuento', CASE WHEN juegos.Descuento > 0 THEN juegos.PrecioDescuento ELSE NULL END
-                )
-            ), ']') AS juegos
+        $query = $this->db->prepare("SELECT categorias.*,
+            IF(categorias.Cantidad_juegos > 0,
+                CONCAT('[', GROUP_CONCAT(
+                    JSON_OBJECT(
+                        'Id', juegos.Id_juego,
+                        'Nombre', juegos.Nombre,
+                        'Descripcion', juegos.Descripcion,
+                        'Precio', juegos.Precio, 
+                        'Descuento', juegos.Descuento,
+                        'Precio Descuento', COALESCE(juegos.PrecioDescuento, NULL)
+                    )
+                ), ']'), NULL
+            ) AS juegos
             FROM categorias
-            LEFT JOIN juegos ON categorias.Id_categoria = juegos.Id_categoria WHERE
-            categorias.Id_categoria = :id_categoria");
+            LEFT JOIN juegos ON categorias.Id_categoria = juegos.Id_categoria 
+            WHERE categorias.Id_categoria = :id_categoria");
         $query->bindParam(':id_categoria', $id);
         $query->execute();
 
         $result = $query->fetch(PDO::FETCH_OBJ);
-        $result->juegos = json_decode($result->juegos);
+        $result->juegos = empty($result->juegos) ? null : json_decode($result->juegos, true);
         return $result;
     }
 
@@ -61,6 +63,13 @@ class CategoryModel extends Model
     function deleteCategory($id)
     {
         $query = $this->db->prepare("DELETE FROM categorias WHERE Id_categoria = :id");
+        $query->bindParam(':id', $id);
+        $query->execute();
+    }
+
+    function gameCount($id, $sign)
+    {
+        $query = $this->db->prepare("UPDATE categorias SET Cantidad_juegos = Cantidad_juegos $sign 1 WHERE Id_categoria = :id");
         $query->bindParam(':id', $id);
         $query->execute();
     }

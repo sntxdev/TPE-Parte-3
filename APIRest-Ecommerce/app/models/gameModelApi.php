@@ -45,27 +45,41 @@ class GameModel extends Model
         $query->bindParam(':imagen', $imagen);
         $query->execute();
 
+        $categoryModel = new CategoryModel();
+        $categoryModel->gameCount($categoriaJuego, '+');
 
         return $this->db->lastInsertId();
     }
 
-    function updateGame($id, $categoriaJuego, $nombreJuego, $descripcion, $precio, $descuento, $imagen)
+    function updateGame($id, $categoriaJuego, $nombreJuego, $descripcion, $precio, $descuento, $precioDescuento, $imagen)
     {
-        $query = $this->db->prepare("UPDATE juegos SET Id_categoria = :id_categoria, Nombre = :nombre, Descripcion = :descripcion, Precio = :precio, Descuento = :descuento, Imagen = :imagen WHERE Id_juego = :id");
+        $query = $this->db->prepare("UPDATE juegos SET Id_categoria = :id_categoria, Nombre = :nombre, Descripcion = :descripcion, Precio = :precio, Descuento = :descuento, PrecioDescuento = :precioDescuento, Imagen = :imagen WHERE Id_juego = :id");
         $query->bindParam(':id', $id);
         $query->bindParam(':id_categoria', $categoriaJuego);
         $query->bindParam(':nombre', $nombreJuego);
         $query->bindParam(':descripcion', $descripcion);
         $query->bindParam(':precio', $precio);
         $query->bindParam(':descuento', $descuento);
+        $query->bindParam(':precioDescuento', $precioDescuento);
         $query->bindParam(':imagen', $imagen);
         $query->execute();
     }
 
     function deleteGame($id)
     {
+        $query = $this->db->prepare("SELECT Id_categoria FROM juegos WHERE Id_juego = :id");
+        $query->bindParam(':id', $id);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_OBJ);
+
         $query = $this->db->prepare("DELETE FROM juegos WHERE Id_juego = :id");
         $query->bindParam(':id', $id);
         $query->execute();
+
+        if ($result) {
+            $categoryId = $result->Id_categoria;
+            $categoryModel = new CategoryModel();
+            $categoryModel->gameCount($categoryId, '-');
+        }
     }
 }

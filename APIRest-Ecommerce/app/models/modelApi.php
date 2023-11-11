@@ -68,6 +68,8 @@ class Model
         `Nombre` varchar(50) NOT NULL,
         `Descripcion` varchar(500) DEFAULT NULL,
         `Precio` int(11) NOT NULL,
+        `Descuento` int(3) NULL,
+        `PrecioDescuento` int(11) NULL,
         `Imagen` varchar(255) DEFAULT NULL
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -169,43 +171,6 @@ class Model
       --
       ALTER TABLE `juegos`
         ADD CONSTRAINT `juegos_ibfk_1` FOREIGN KEY (`Id_categoria`) REFERENCES `categorias` (`Id_categoria`) ON UPDATE CASCADE;
-
-      --
-      -- Triggers `juegos`
-      --
-      DELIMITER 
-      CREATE TRIGGER `after_juego_delete` AFTER DELETE ON `juegos` FOR EACH ROW BEGIN
-          UPDATE categorias
-          SET cantidad_juegos = (
-              SELECT COUNT(*)
-              FROM juegos
-              WHERE juegos.id_categoria = categorias.id_categoria
-          )
-          WHERE id_categoria = OLD.id_categoria;
-  
-  
-      DELIMITER ;
-      DELIMITER 
-      CREATE TRIGGER `after_juego_insert` AFTER INSERT ON `juegos` FOR EACH ROW BEGIN
-          UPDATE categorias
-          SET cantidad_juegos = cantidad_juegos + 1
-          WHERE id_categoria = NEW.id_categoria;
-  
-  
-      DELIMITER ;
-      DELIMITER 
-      CREATE TRIGGER `after_juego_update` AFTER UPDATE ON `juegos` FOR EACH ROW BEGIN
-          UPDATE categorias
-          SET cantidad_juegos = (
-              SELECT COUNT(*)
-              FROM juegos
-              WHERE juegos.id_categoria = categorias.id_categoria
-          )
-          WHERE id_categoria = NEW.id_categoria;
-  
-      DELIMITER ;
-  
-      -- --------------------------------------------------------
       COMMIT;
       END;
       $this->db->query($sql);
