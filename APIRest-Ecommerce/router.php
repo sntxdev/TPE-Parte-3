@@ -16,6 +16,8 @@ $router->addRoute('games/:ID', 'GET',    'GameControllerApi', 'get');   # GameCo
 $router->addRoute('games/:ID', 'PUT',    'GameControllerApi', 'update'); # GameControllerApi->update($params[":ID"])
 $router->addRoute('games/:ID', 'DELETE', 'GameControllerApi', 'delete'); # GameControllerApi->delete($params[":ID"])
 
+$router->addRoute('offers', 'GET', 'GameControllerApi', 'getOffers');
+
 /* CATEGORIES routes */
 $router->addRoute('categories',     'GET',    'CategoryControllerApi', 'get');
 $router->addRoute('categories',     'POST',   'CategoryControllerApi', 'create');

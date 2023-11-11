@@ -17,11 +17,25 @@ class CategoryModel extends Model
 
     function getCategory($id)
     {
-        $query = $this->db->prepare("SELECT * FROM categorias WHERE Id_categoria = :id_categoria");
+        $query = $this->db->prepare("SELECT categorias.*, 
+            CONCAT('[', GROUP_CONCAT(
+                JSON_OBJECT(
+                    'Id', juegos.Id_juego,
+                    'Nombre', juegos.Nombre,
+                    'Descripcion', juegos.Descripcion,
+                    'Precio', juegos.Precio, 
+                    'Descuento', juegos.Descuento,
+                    'Precio Descuento', CASE WHEN juegos.Descuento > 0 THEN juegos.PrecioDescuento ELSE NULL END
+                )
+            ), ']') AS juegos
+            FROM categorias
+            LEFT JOIN juegos ON categorias.Id_categoria = juegos.Id_categoria WHERE
+            categorias.Id_categoria = :id_categoria");
         $query->bindParam(':id_categoria', $id);
         $query->execute();
-        $result = $query->fetch(PDO::FETCH_OBJ);
 
+        $result = $query->fetch(PDO::FETCH_OBJ);
+        $result->juegos = json_decode($result->juegos);
         return $result;
     }
 

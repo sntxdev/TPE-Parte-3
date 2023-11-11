@@ -14,16 +14,36 @@ class GameControllerApi extends ControllerApi
 
     function get($params = [])
     {
+        $sortField = $_GET['sort'] ?? 'id_juego';
+        $orderDirection = $_GET['order'] ?? 'asc';
+        $page = $_GET['page'] ?? '';
+        $filter = $_GET['filter'] ?? '';
+        $condition = $_GET['condition'] ?? '0';
+        $comparison = $_GET['comparison'] ?? 'equal';
+
         if (empty($params)) {
-            $games = $this->model->getGames();
+            $games = $this->model->getGames($sortField, $orderDirection, $page, $filter, $condition, $comparison);
             return $this->view->response($games, 200);
-        } else {
+        } elseif ($params[':ID']) {
             $game = $this->model->getGame($params[":ID"]);
             if (!empty($game)) {
                 return $this->view->response($game, 200);
             } else {
                 return $this->view->response('El juego con id= ' . $params[':ID'] . ' no existe.', 404);
             }
+        }
+    }
+
+    function getOffers()
+    {
+        $sortField = $_GET['sort'] ?? 'id_juego';
+        $orderDirection = $_GET['order'] ?? 'asc';
+
+        $offers = $this->model->getOffers($sortField, $orderDirection);
+        if (!empty($offers)) {
+            return $this->view->response($offers, 200);
+        } else {
+            return $this->view->response('No hay ofertas.', 200);
         }
     }
 

@@ -4,16 +4,8 @@ require_once 'modelApi.php';
 
 class GameModel extends Model
 {
-    function getGames()
+    function getGames($sortField, $orderDirection, $page, $filter, $condition, $comparison)
     {
-        $sortField = $_GET['sort'] ?? 'id_juego';
-        $orderDirection = $_GET['order'] ?? 'asc';
-        $filter = $_GET['filter'] ?? '';
-        $condition = $_GET['condition'] ?? '0';
-        $comparison = $_GET['comparison'] ?? 'equal';
-        $page = $_GET['page'] ?? '';
-        $offers = $_GET['offers'] ?? '';
-
         if (!empty($page)) {
             return $this->gameFunctions->getGamesByPage($sortField, $orderDirection, $page);
         }
@@ -33,6 +25,14 @@ class GameModel extends Model
         $result = $query->fetch(PDO::FETCH_OBJ);
 
         return $result;
+    }
+
+    function getOffers($sortField, $orderDirection)
+    {
+        $query = $this->db->prepare("SELECT juegos.*, categorias.Nombre AS Categoria FROM juegos JOIN categorias ON juegos.Id_categoria = categorias.Id_categoria WHERE Descuento > 0 ORDER BY $sortField $orderDirection");
+        $query->execute();
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
     function addGame($categoriaJuego, $nombreJuego, $descripcion, $precio, $imagen)
