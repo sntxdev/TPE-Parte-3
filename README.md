@@ -155,7 +155,7 @@ DELETE '/api/games/1'
 
 ### Obtener las categorias
 
-```
+```http
 GET /api/categories
 ```
 
