@@ -1,15 +1,18 @@
 <?php
 require_once 'controllerApi.php';
 require_once 'app/models/gameModelApi.php';
+require_once 'app/functions/gameHandler.php';
 
 class GameControllerApi extends ControllerApi
 {
     private $model;
+    private $gameHandler;
 
     function __construct()
     {
         parent::__construct();
         $this->model = new GameModel();
+        $this->gameHandler = new GameHandle();
     }
 
     function get($params = [])
@@ -22,15 +25,9 @@ class GameControllerApi extends ControllerApi
         $comparison = $_GET['comparison'] ?? 'equal';
 
         if (empty($params)) {
-            $games = $this->model->getGames($sortField, $orderDirection, $page, $filter, $condition, $comparison);
-            return $this->view->response($games, 200);
-        } elseif ($params[':ID']) {
-            $game = $this->model->getGame($params[":ID"]);
-            if (!empty($game)) {
-                return $this->view->response($game, 200);
-            } else {
-                return $this->view->response('El juego con id= ' . $params[':ID'] . ' no existe.', 404);
-            }
+            $this->gameHandler->handleGetGames($this->model, $this->view, $sortField, $orderDirection, $page, $filter, $condition, $comparison);
+        } else {
+            $this->gameHandler->handleGetGame($this->model, $this->view, $params, $sortField, $orderDirection);
         }
     }
 
@@ -62,7 +59,6 @@ class GameControllerApi extends ControllerApi
         } else {
             $id = $this->model->addGame($categoria, $nombre, $descripcion, $precio, $imagen);
 
-            //dijo el profe que en una API es buena practica devolver el recurso creado
             $juego = $this->model->getGame($id);
             $this->view->response($juego, 201);
         }
