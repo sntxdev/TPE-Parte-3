@@ -3,11 +3,8 @@ require_once 'modelApi.php';
 
 class CategoryModel extends Model
 {
-    function getCategories()
+    function getCategories($sortField, $orderDirection)
     {
-        $sortField = isset($_GET['sort']) ? $_GET['sort'] : 'Id_categoria';
-        $orderDirection = isset($_GET['order']) ? $_GET['order'] : 'asc';
-
         $query = $this->db->prepare("SELECT * FROM categorias ORDER BY $sortField $orderDirection");
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_OBJ);

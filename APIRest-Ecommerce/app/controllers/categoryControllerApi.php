@@ -14,8 +14,11 @@ class CategoryControllerApi extends ControllerApi
 
     function get($params = [])
     {
+        $sortField = $_GET['sort'] ?? 'Id_categoria';
+        $orderDirection = $_GET['order'] ?? 'asc';
+
         if (empty($params)) {
-            $categories = $this->model->getCategories();
+            $categories = $this->model->getCategories($sortField, $orderDirection);
             return $this->view->response($categories, 200);
         } else {
             $categories = $this->model->getCategory($params[':ID']);

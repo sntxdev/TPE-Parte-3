@@ -19,9 +19,9 @@ class GameControllerApi extends ControllerApi
     {
         $sortField = $_GET['sort'] ?? 'id_juego';
         $orderDirection = $_GET['order'] ?? 'asc';
-        $page = $_GET['page'] ?? '';
-        $filter = $_GET['filter'] ?? '';
-        $condition = $_GET['condition'] ?? '0';
+        $page = $_GET['page'] ?? null;
+        $filter = $_GET['filter'] ?? null;
+        $condition = $_GET['condition'] ?? null;
         $comparison = $_GET['comparison'] ?? 'equal';
 
         if (empty($params)) {
