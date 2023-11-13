@@ -242,7 +242,7 @@ data '{
 | `Nombre`      | `string` | **Required**. Nombre de la categoria |
 | `Descripcion`      | `String` | **Required**. Descripcion de la categoria |
 
-### Eliminar un juego
+### Eliminar una categoria
 
 ```http
 DELETE /api/categories/:id
