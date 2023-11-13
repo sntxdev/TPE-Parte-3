@@ -255,3 +255,31 @@ Ejemplo:
 ```
 DELETE '/api/categories/7'
 ```
+
+## API Endpoints Ofertas
+
+### Obtener las ofertas
+
+```http
+GET /api/offers
+```
+
+### Obtener ofertas ordenadas
+
+```http
+GET /api/offers?
+```
+
+| Parametro | Tipo     | Descripción                | Default |
+| -------- | ------- | ------------------------- |--------|
+| `sort` | `string` |  Campo por el cual se ordena | Id_juego |
+| `order` | `string` |  Orden ascendente o descendente | asc |
+
+`
+order -> asc / desc
+`
+
+Ejemplo: 
+```
+GET '/api/offers?sort=descripcion'
+```
