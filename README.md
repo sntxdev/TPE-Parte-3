@@ -1,6 +1,6 @@
 # TPE-Parte-3 - APIRest-ful
 
-API REST que permite ver un juego, ver varios juegos con distintas opciones, crear, editar y eliminar juegos. También existe la posibilidad de la Autenticación de usuarios con Tókens. 
+API REST que permite ver un juego, ver varios juegos con distintas opciones, crear, editar y eliminar juegos.
 
 ## API Endpoints Juegos
 
